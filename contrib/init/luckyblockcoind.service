@@ -1,0 +1,22 @@
+[Unit]
+Description=Luckyblockcoin's distributed currency daemon
+After=network.target
+
+[Service]
+User=luckyblockcoin
+Group=luckyblockcoin
+
+Type=forking
+PIDFile=/var/lib/luckyblockcoind/luckyblockcoind.pid
+ExecStart=/usr/bin/luckyblockcoind -daemon -pid=/var/lib/luckyblockcoind/luckyblockcoind.pid \
+-conf=/etc/luckyblockcoin/luckyblockcoin.conf -datadir=/var/lib/luckyblockcoind -disablewallet
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,6 @@
+usr/local/bin/luckyblockcoin-qt usr/bin
+share/pixmaps/luckyblockcoin32.xpm usr/share/pixmaps
+share/pixmaps/luckyblockcoin16.xpm usr/share/pixmaps
+share/pixmaps/luckyblockcoin128.png usr/share/pixmaps
+debian/luckyblockcoin-qt.desktop usr/share/applications
+debian/luckyblockcoin-qt.protocol usr/share/kde4/services/

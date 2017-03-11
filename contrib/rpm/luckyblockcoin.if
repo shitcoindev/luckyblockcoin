@@ -1,0 +1,157 @@
+
+## <summary>policy for luckyblockcoin</summary>
+
+
+########################################
+## <summary>
+##	Transition to luckyblockcoin.
+## </summary>
+## <param name="domain">
+## <summary>
+##	Domain allowed to transition.
+## </summary>
+## </param>
+#
+interface(`luckyblockcoin_domtrans',`
+	gen_require(`
+		type luckyblockcoin_t, luckyblockcoin_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, luckyblockcoin_exec_t, luckyblockcoin_t)
+')
+
+
+########################################
+## <summary>
+##	Execute luckyblockcoin server in the luckyblockcoin domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`luckyblockcoin_initrc_domtrans',`
+	gen_require(`
+		type luckyblockcoin_initrc_exec_t;
+	')
+
+	init_labeled_script_domtrans($1, luckyblockcoin_initrc_exec_t)
+')
+
+
+########################################
+## <summary>
+##	Search luckyblockcoin lib directories.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`luckyblockcoin_search_lib',`
+	gen_require(`
+		type luckyblockcoin_var_lib_t;
+	')
+
+	allow $1 luckyblockcoin_var_lib_t:dir search_dir_perms;
+	files_search_var_lib($1)
+')
+
+########################################
+## <summary>
+##	Read luckyblockcoin lib files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`luckyblockcoin_read_lib_files',`
+	gen_require(`
+		type luckyblockcoin_var_lib_t;
+	')
+
+	files_search_var_lib($1)
+	read_files_pattern($1, luckyblockcoin_var_lib_t, luckyblockcoin_var_lib_t)
+')
+
+########################################
+## <summary>
+##	Manage luckyblockcoin lib files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`luckyblockcoin_manage_lib_files',`
+	gen_require(`
+		type luckyblockcoin_var_lib_t;
+	')
+
+	files_search_var_lib($1)
+	manage_files_pattern($1, luckyblockcoin_var_lib_t, luckyblockcoin_var_lib_t)
+')
+
+########################################
+## <summary>
+##	Manage luckyblockcoin lib directories.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`luckyblockcoin_manage_lib_dirs',`
+	gen_require(`
+		type luckyblockcoin_var_lib_t;
+	')
+
+	files_search_var_lib($1)
+	manage_dirs_pattern($1, luckyblockcoin_var_lib_t, luckyblockcoin_var_lib_t)
+')
+
+
+########################################
+## <summary>
+##	All of the rules required to administrate
+##	an luckyblockcoin environment
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <param name="role">
+##	<summary>
+##	Role allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`luckyblockcoin_admin',`
+	gen_require(`
+		type luckyblockcoin_t;
+		type luckyblockcoin_initrc_exec_t;
+		type luckyblockcoin_var_lib_t;
+	')
+
+	allow $1 luckyblockcoin_t:process { ptrace signal_perms };
+	ps_process_pattern($1, luckyblockcoin_t)
+
+	luckyblockcoin_initrc_domtrans($1)
+	domain_system_change_exemption($1)
+	role_transition $2 luckyblockcoin_initrc_exec_t system_r;
+	allow $2 system_r;
+
+	files_search_var_lib($1)
+	admin_pattern($1, luckyblockcoin_var_lib_t)
+
+')
+
